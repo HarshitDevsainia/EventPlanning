@@ -1,6 +1,7 @@
 import {errorHandler} from '../utils/error.js';
 import User from'../model/user.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const signUp=async(req,res,next)=>{
     try{
@@ -34,7 +35,9 @@ export const signIn=async(req,res,next)=>{
             next(errorHandler(400,'Incorrect Password'));
             return;
         }
-        res.send({JSON,msg: "Successfully login"});
+        const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
+        const {password:pass, ...rest}= currUser[0]._doc;
+        res.status(200).cookie('access_token',token,{httpOnly:true},{exp: Math.floor(Date.now() / 1000) + (60 * 60)}).json(rest);
     }
     catch(err){
        return next(err);
