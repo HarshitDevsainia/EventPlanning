@@ -3,11 +3,13 @@ import {TextInput,Label, Button, Alert, Spinner} from 'flowbite-react';
 import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {HiInformationCircle} from 'react-icons/hi'
+import {useDispatch, useSelector} from 'react-redux'
+import {signInFailure,signInSuccess,signInStart} from '../redux/user/userSlice'
 
 export default function Signin() {
   const [user,setUser]=useState({});
-  const [errorMsg,setErrorMsg]=useState(null);
-  const [loader,setLoader]=useState(false);
+  let {loading:loader,error:errorMsg}=useSelector((state)=>state.user);
+  const dispatch=useDispatch();
   const navigate=useNavigate();
   const handleInput=(e)=>{
     setUser({...user,[e.target.id]:e.target.value.trim()});
@@ -15,6 +17,28 @@ export default function Signin() {
   const handleSubmit=async(e)=>{
     e.preventDefault();
     console.log(user);
+    if(!user.email || !user.password){
+      dispatch(signInFailure('All fiels are Required'));
+      return;
+    }
+    try{
+      dispatch(signInStart());
+        const res=await fetch('/api/auth/signIn',{
+          method:'POST',
+          headers:{'Content-Type':'Application/json'},
+          body:JSON.stringify(user)
+        });
+        const data=await res.json();
+        if(!res.ok){
+          dispatch(signInFailure(data.message));
+          return;
+        }
+        dispatch(signInSuccess(data));
+        navigate('/');
+    }
+    catch(err){
+      dispatch(signInFailure(err.message));
+    }
   }
   return (
     <div className="flex flex-col md:flex-row m-2 items-center md:my-10 p-10">
