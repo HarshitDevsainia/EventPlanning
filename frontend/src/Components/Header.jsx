@@ -1,12 +1,31 @@
 import { Button, Navbar } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { signOutUserSuccess } from '../redux/user/userSlice';
+
 
 export default function Header() {
   const path=useLocation().pathname;
   const {currUser}=useSelector((state)=>state.user);
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
   console.log(currUser);
+  async function handleSignOut() {
+    try{
+        const res=await fetch('/api/auth/signOut',{method:'POST'});
+        const data=await res.json();
+        if(!res.ok){
+            console.log(data.message);
+            return;
+        }
+        dispatch(signOutUserSuccess());
+        navigate('/');
+    }catch(err){
+        console.log(err);
+    }
+  }
   return (
     <>
         <Navbar>
@@ -22,7 +41,7 @@ export default function Header() {
             </Navbar.Collapse>
             {(currUser==null)?
                 <Link to={'/signIn'}><Button size={'sm'} outline className=' !bg-violet-900'>SignIn</Button></Link>
-                :<Button size={'sm'} outline className=' !bg-violet-900'>LogOut</Button>
+                :<Button size={'sm'} outline className=' !bg-violet-900' onClick={handleSignOut}>LogOut</Button>
             }
         </Navbar>
     </>
