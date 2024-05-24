@@ -63,7 +63,7 @@ export default function Signup() {
               <div className="">
                 <Label htmlFor='email'>Email</Label>
               </div>
-              <TextInput id='email' type='text' placeholder='Email' shadow required onChange={handleInput}/>
+              <TextInput id='email' type='email' placeholder='Email' shadow required onChange={handleInput}/>
             </div>
             <div className="">
               <div className="">

@@ -1,7 +1,12 @@
-import { Navbar } from 'flowbite-react'
-import React from 'react'
+import { Button, Navbar } from 'flowbite-react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
+  const path=useLocation().pathname;
+  const {currUser}=useSelector((state)=>state.user);
+  console.log(currUser);
   return (
     <>
         <Navbar>
@@ -11,11 +16,14 @@ export default function Header() {
             </Navbar.Brand>
             <Navbar.Toggle/>
             <Navbar.Collapse>
-                <Navbar.Link href='/' active>Home</Navbar.Link>
-                <Navbar.Link href='/about' active>About</Navbar.Link>
-                <Navbar.Link href='/create'>Create Event</Navbar.Link>
-                <Navbar.Link href='signin'>Signin</Navbar.Link>
+                <Navbar.Link href='/' active={path==='/'}>Home</Navbar.Link>
+                <Navbar.Link href='/about' active={path==='/about'}>About</Navbar.Link>
+                <Navbar.Link href='/create' active={path==='/create'}>Create Event</Navbar.Link>
             </Navbar.Collapse>
+            {(currUser==null)?
+                <Link to={'/signIn'}><Button size={'sm'} outline className=' !bg-violet-900'>SignIn</Button></Link>
+                :<Button size={'sm'} outline className=' !bg-violet-900'>LogOut</Button>
+            }
         </Navbar>
     </>
   )

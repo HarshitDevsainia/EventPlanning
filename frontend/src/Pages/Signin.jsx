@@ -55,13 +55,13 @@ export default function Signin() {
             <div className="">
               <Label htmlFor='email'>Email</Label>
             </div>
-            <TextInput id='email' type='text' placeholder='Email' shadow required onChange={handleInput}/>
+            <TextInput id='email' type='email' placeholder='Email' shadow required onChange={handleInput}/>
           </div>
           <div className="">
             <div className="">
               <Label htmlFor='password'>Password</Label>
             </div>
-            <TextInput id='password' type='text' placeholder='Password' shadow required onChange={handleInput}/>
+            <TextInput id='password' type='password' placeholder='Password' shadow required onChange={handleInput}/>
           </div>
           <Button type='submit' className=' !bg-violet-900'>
             {loader ? 
