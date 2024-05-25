@@ -20,3 +20,12 @@ export const createEvent=async(req,res,next)=>{
         next(err);
     }
 }
+export const getEvent=async(req,res,next)=>{
+    try{
+        const data=await event.find();
+        res.status(200).json(data);
+    }
+    catch(err){
+        next(err);
+    }
+}

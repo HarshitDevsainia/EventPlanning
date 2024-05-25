@@ -1,6 +1,7 @@
 import React from 'react'
 import {Carousel , Card} from 'flowbite-react'
 import { Typewriter } from 'react-simple-typewriter'
+import ImageBanner from '../Components/ImageBanner'
 
 
 export default function Home() {
@@ -10,16 +11,7 @@ export default function Home() {
           W<Typewriter words={['elcome to the Top Events']} loop />
           <p className='text-sm font-normal'>Welcome to <b>Top Event </b>, your ultimate solution for seamless and stress-free event planning. Whether you’re organizing a corporate conference, a wedding, a birthday party, or any special occasion, our platform provides all the tools you need to create memorable events with ease.</p>
       </div>
-      <div className="!h-[500px] sm:h-44 xl:h-80 2xl:h-96 py-3">
-      <Carousel>
-        <img src="https://images.pexels.com/photos/1015568/pexels-photo-1015568.jpeg" alt="..." />
-        <img src="https://images.pexels.com/photos/2566581/pexels-photo-2566581.jpeg" alt="..." />
-        <img src="https://images.pexels.com/photos/1181408/pexels-photo-1181408.jpeg" alt="..." />
-        <img src="https://images.pexels.com/photos/14607677/pexels-photo-14607677.jpeg" alt="..." />
-        <img src="https://images.pexels.com/photos/1709003/pexels-photo-1709003.jpeg" alt="..." />
-      </Carousel>
-    </div>
-    
+      <ImageBanner/>
     <div className=" grid p-5">
         <Card
           className="max-w-sm"
