@@ -39,10 +39,14 @@ export default function Header() {
             <Navbar.Collapse>
                 <Navbar.Link href='/' active={path==='/'}>Home</Navbar.Link>
                 <Navbar.Link href='/about' active={path==='/about'}>About</Navbar.Link>
-                <Navbar.Link href='/create' active={path==='/create'}>Create Event</Navbar.Link>
+                
                 {(currUser==null)?
                 <Navbar.Link href='/signIn' className='hover:text-blue-500' >SignIn</Navbar.Link>
-                :<p className='hover:text-blue-500 pl-3 cursor-pointer' onClick={handleSignOut}>LogOut</p>
+                :
+                <>
+                  <Navbar.Link href='/create' active={path==='/create'}>Create Event</Navbar.Link>
+                  <p className='hover:text-blue-500 pl-3 cursor-pointer' onClick={handleSignOut}>LogOut</p>
+                </>
                 }
             </Navbar.Collapse>
             

@@ -6,6 +6,7 @@ import Home from './Pages/Home';
 import Signin from './Pages/Signin';
 import Signup from './Pages/Signup';
 import Footer from './Components/FooterWeb';
+import CreateEvent from './Pages/CreateEvent';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Header/>
         <Routes>
           <Route path='/' element={<Home/>}></Route>
+          <Route path='/create' element={<CreateEvent/>}></Route>
           <Route path='/signin' element={<Signin/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
         </Routes>
