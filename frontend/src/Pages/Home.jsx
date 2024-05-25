@@ -1,10 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {Carousel , Card} from 'flowbite-react'
 import { Typewriter } from 'react-simple-typewriter'
 import ImageBanner from '../Components/ImageBanner'
+import {Link} from 'react-router-dom'
+import EventCard from '../Components/EventCard'
 
 
 export default function Home() {
+  const [events,setEvents]=useState();
+  useEffect(()=>{
+    const fetchEvents=async()=>{
+      try{
+          const res=await fetch('/api/event/getEvent');
+          const data=await res.json();
+          if(!res.ok){
+            console.log(data.message);
+            return;
+          }
+          else{
+            setEvents(data);
+          }
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+    fetchEvents();
+  },[]);
+  console.log(events);
   return (
     <div className='min-h-screen'>
       <div className='text-4xl sm:text-3xl font-bold md:h-auto sm:px-24 md:px-24 lg:px-24 xl:px-24 py-16 h-96 m-20 '>
@@ -12,20 +35,18 @@ export default function Home() {
           <p className='text-sm font-normal'>Welcome to <b>Top Event </b>, your ultimate solution for seamless and stress-free event planning. Whether you’re organizing a corporate conference, a wedding, a birthday party, or any special occasion, our platform provides all the tools you need to create memorable events with ease.</p>
       </div>
       <ImageBanner/>
-    <div className=" grid p-5">
-        <Card
-          className="max-w-sm"
-          imgAlt="Meaningful alt text for an image that is not purely decorative"
-          imgSrc="https://images.pexels.com/photos/7648306/pexels-photo-7648306.jpeg"
-        >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Tech Conference 2024
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-          Annual technology conference with keynote speakers and workshops.
-          </p>
-        </Card>
-    </div>
+      {events && 
+        <>
+        <h2 className="text-2xl font-semibold text-center p-2 bg-violet-100">Current Events</h2>
+        <div className=" grid p-5 grid-col-1 sm:grid-cols-2 md:grid-cols-3">
+         {events && events.map((event)=>(
+            <Link className="m-2" key={event._id} to={`/${event._id}`}>
+                <EventCard event={event}/>
+            </Link>
+          ))}
+        </div>
+        </>
+      }
     </div>
   )
 }

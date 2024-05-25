@@ -29,3 +29,38 @@ export const getEvent=async(req,res,next)=>{
         next(err);
     }
 }
+export const getOneEvent=async(req,res,next)=>{
+    const id=req.params.eventID;
+    try{
+        const data=await event.findById(id);
+        console.log(data);
+        if(!data){
+            next(errorHandler(400,'No Event Exist'));
+            return;
+        }
+        res.status(200).json(data);
+    }
+    catch(err){
+        next(err);
+    }
+}
+export const deleteEvent=async(req,res,next)=>{
+    const eventId=req.params.eventId;
+    const userId=req.params.userId;
+    if(req.user.id!=userId){
+        next(errorHandler(400,'Unautherised User'));
+        return;
+    }
+    try{
+        const data=await event.findById(eventId);
+        if(userId!=data.eventOwner){
+           next(errorHandler(500,'You are not Allowed to Delete this Event'));
+          return;
+        }
+        await event.findByIdAndDelete(eventId);
+        res.status(200).json({msg:'successFully deleted'});
+    }
+    catch(err){
+        next(err);
+    }
+}
