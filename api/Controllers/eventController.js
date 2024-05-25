@@ -33,12 +33,45 @@ export const getOneEvent=async(req,res,next)=>{
     const id=req.params.eventID;
     try{
         const data=await event.findById(id);
-        console.log(data);
         if(!data){
             next(errorHandler(400,'No Event Exist'));
             return;
         }
         res.status(200).json(data);
+    }
+    catch(err){
+        next(err);
+    }
+}
+export const updateEvent=async(req,res,next)=>{
+    const eventId=req.params.eventId;
+    const userId=req.params.userId;
+    if(req.user.id!=userId){
+        next(errorHandler(400,'Unautherised User'));
+        return;
+    }
+    if(!req.body.eventName || !req.body.eventDescription || !req.body.eventImage || !req.body.eventStart || !req.body.eventEnd || !req.body.eventLocation){
+        return next(errorHandler(400,'All fields are Required'));
+    }
+    try{
+        const currEvent=await event.findById(eventId);
+        if(currEvent.eventOwner!=userId){
+            next(errorHandler(500,'You are not allowed to Update this user'));
+            return;
+        }
+        req.body.eventOwner=req.params.id;
+        const updatedEvent=await event.findByIdAndUpdate(eventId,{
+            $set:{
+                eventName:req.body.eventName,
+                eventDescription:req.body.eventDescription,
+                eventImage:req.body.eventImage,
+                eventStart:req.body.eventStart,
+                eventEnd:req.body.eventEnd,
+                eventOwner:req.body.eventOwner,
+                eventLocation:req.body.eventLocation
+            }
+        });
+        res.status(200).json(updatedEvent);
     }
     catch(err){
         next(err);

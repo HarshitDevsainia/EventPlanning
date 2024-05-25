@@ -3,22 +3,39 @@ import React, { useEffect, useState } from 'react'
 import {app} from '../firebase.js'
 import {getStorage , uploadBytesResumable , ref, getDownloadURL} from 'firebase/storage'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 
 export default function CreateEvent() {
-  const [data,setData]=useState({});
   const [ImageFile,setImageFile]=useState();
   const [imageURL,setImageURL]=useState();
   const [imageFileUpload,setImageFileUpload]=useState(false);
   const [imageFileError,setImageFileError]=useState(null);
   const [imageFileUploadProgress,setImageFileUploadProgress]=useState(null);
   const [error,setError]=useState(null);
-
   const {currUser}=useSelector((state)=>state.user);
   const navigate=useNavigate();
+  const path=useLocation().pathname;
+  const eventId=path.slice(13,path.length);
+  const [data,setData]=useState({});
+  console.log(data);
+  useEffect(()=>{
+    const fetchEvent=async()=>{
+        try{
+            const res=await fetch(`/api/event/getOneEvent/${eventId}`);
+            const currdata=await res.json();
+            if(!res.ok){
+                console.log(currdata.message);
+            }
+            setData(currdata);
+        }
+        catch(err){
 
- 
+        }
+    }
+    fetchEvent();
+  },[]);
+
   const handleFileInput=(e)=>{
     const file=e.target.files[0];
     if(file){
@@ -74,8 +91,8 @@ export default function CreateEvent() {
     else{
         setError(false);
         try{
-            const res=await fetch(`/api/event/createEvent/${currUser._id}`,{
-                method:'POST',
+            const res=await fetch(`/api/event/updateEvent/${eventId}/${currUser._id}`,{
+                method:'Put',
                 headers:{'Content-Type':'application/JSON'},
                 body:JSON.stringify(data)
             });
@@ -84,7 +101,7 @@ export default function CreateEvent() {
                 setError(currData.message);
                 return;
             }
-            navigate('/');
+            navigate(`/${eventId}`);
         }
         catch(err){
             setError(err.message);
@@ -93,8 +110,10 @@ export default function CreateEvent() {
     }
   }
   return (
-    <div className='min-h-screen max-w-2xl mx-auto p-2'>
-        <h1 className='text-2xl text-center font-semibold m-5'>Create Your Event</h1>
+    <>
+       {event && 
+        <div className='min-h-screen max-w-2xl mx-auto p-2'>
+        <h1 className='text-2xl text-center font-semibold m-5'>Update Your Event</h1>
         {imageFileError!=null && <Alert color='failure' onDismiss={()=>setImageFileError(null)}>{imageFileError}</Alert>}
         {error!=null && <Alert color='failure' onDismiss={()=>setError(null)}>{error}</Alert>}
         <div className="mb-5">
@@ -107,14 +126,22 @@ export default function CreateEvent() {
                         id='eventName' 
                         required 
                         onChange={handleInputChange}
+                        value={data.eventName}
                     />
                 </div>
                 <div className="my-2">
                     <Label htmlFor='eventDescription'>Decription</Label>
-                    <Textarea type='text' placeholder='EventDescription' id='eventDescription' required onChange={handleInputChange}/>
+                    <Textarea 
+                        type='text' 
+                        placeholder='EventDescription' 
+                        id='eventDescription' 
+                        required 
+                        onChange={handleInputChange}
+                        value={data.eventDescription}
+                    />
                 </div>
                 <div className="my-2">
-                    {imageURL && <img className='w-24 h-16 rounded-lg' src={imageURL} alt='image'></img>}
+                    <img className='w-24 h-16 rounded-lg' src={imageURL||data.eventImage} alt='image'></img>
                     {imageFileUpload && <p className=' font-semibold text-blue-600'>{imageFileUploadProgress}%</p>}
                     <Label htmlFor='eventImage' value='Upload Image'/>
                     <FileInput type='text' id='eventImage' onChange={handleFileInput} disabled={imageFileUpload}/>
@@ -125,6 +152,7 @@ export default function CreateEvent() {
                         type='text' 
                         id='eventStart' 
                         required 
+                        value={new Date(data.eventStart)}
                         onSelectedDateChanged={(date)=>setData({...data,['eventStart']:date.toLocaleDateString()})}
                     />
                 </div>
@@ -134,16 +162,19 @@ export default function CreateEvent() {
                         type='text' 
                         id='eventEnd' 
                         required 
+                        value={new Date(data.eventEnd)}
                         onSelectedDateChanged={(date)=>setData({...data,['eventEnd']:date.toLocaleDateString()})}
                     />
                 </div>
                 <div className="my-2">
                     <Label htmlFor='eventLocation' value='Location'/>
-                    <TextInput type='text' placeholder='EventLocation' id='eventLocation' required onChange={handleInputChange}/>
+                    <TextInput type='text' value={data.eventLocation} placeholder='EventLocation' id='eventLocation' required onChange={handleInputChange}/>
                 </div>
-                <Button type='submit' className='mt-5 bg-violet-900 w-full' >Create</Button>
+                <Button type='submit' className='mt-5 bg-violet-900 w-full' >Update</Button>
             </form>
         </div>
     </div>
+    }
+    </>
   )
 }

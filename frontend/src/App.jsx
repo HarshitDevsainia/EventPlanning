@@ -8,6 +8,7 @@ import Signup from './Pages/Signup';
 import Footer from './Components/FooterWeb';
 import CreateEvent from './Pages/CreateEvent';
 import ShowEvent from './Pages/ShowEvent';
+import UpdateEvent from './Pages/UpdateEvent'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/' element={<Home/>}></Route>
           <Route path='/create' element={<CreateEvent/>}></Route>
           <Route path='/:id' element={<ShowEvent/>}></Route>
+          <Route path='/updateEvent/:id' element={<UpdateEvent/>}></Route>
           <Route path='/signin' element={<Signin/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
         </Routes>

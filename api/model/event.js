@@ -11,7 +11,7 @@ const eventSchema=new mongoose.Schema({
     },
     eventImage:{
         type:String,
-        required:true
+        default:'https://images.pexels.com/photos/50675/banquet-wedding-society-deco-50675.jpeg'
     },
     eventStart:{
         type:Date,

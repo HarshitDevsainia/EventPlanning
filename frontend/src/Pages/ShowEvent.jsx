@@ -65,7 +65,7 @@ export default function ShowEvent() {
             <p className='text-sm font-semibold'>End: {new Date(event.eventStart).toLocaleDateString()}</p>
           </div>
           <div className="flex items-center justify-between">
-            <Link to={`/updateEvent/${currUser._id}/${event._id}`}><Button className=' bg-violet-900'>Update</Button></Link>
+            <Link to={`/updateEvent/${event._id}`}><Button className=' bg-violet-900'>Update</Button></Link>
             <Button className=' bg-violet-900' onClick={()=>setShowModel(true)}>Delete</Button>
           </div>
        </Card>
